@@ -10,7 +10,7 @@ import {
   format,
 } from 'date-fns';
 
-const CalendarBody = ({year, month, windowWidth}) => {
+const CalendarBodyOfMonth = ({year, month, windowWidth}) => {
   const [checkedDate, setCheckedDate] = useState(
     format(new Date(), 'MM/dd/yyyy'),
   );
@@ -52,7 +52,6 @@ const CalendarBody = ({year, month, windowWidth}) => {
         height: 50,
         textAlign: 'center',
         backgroundColor: item.isToday && '#d0d7f2',
-
         borderColor: item.isToday && '#3f51b5',
         opacity: item.isPrevOrNext ? 0.3 : 1,
       }}
@@ -62,4 +61,4 @@ const CalendarBody = ({year, month, windowWidth}) => {
   ));
 };
 
-export default CalendarBody;
+export default CalendarBodyOfMonth;
