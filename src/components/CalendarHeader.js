@@ -10,6 +10,7 @@ const CalendarHeader = ({windowWidth}) => {
         color: day === '토' ? 'blue' : day === '일' ? 'red' : 'black',
         width: Math.floor(windowWidth / 7),
         textAlign: 'center',
+        marginBottom: 10,
       }}>
       {day}
     </Text>

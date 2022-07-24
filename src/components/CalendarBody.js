@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text} from 'react-native';
 import {
   getMonth,
@@ -11,6 +11,9 @@ import {
 } from 'date-fns';
 
 const CalendarBody = ({year, month, windowWidth}) => {
+  const [checkedDate, setCheckedDate] = useState(
+    format(new Date(), 'MM/dd/yyyy'),
+  );
   const _date = new Date(year, month - 1, 1);
   const monthStart = startOfMonth(_date);
   const weekLength = getWeeksInMonth(monthStart);
@@ -19,22 +22,24 @@ const CalendarBody = ({year, month, windowWidth}) => {
 
   for (let i = 0; i < weekLength * 7; i++) {
     const tempDate = addDays(weekStart, i);
-    const today = format(new Date(), 'MM/dd/yyyy');
 
-    if (today === format(tempDate, 'MM/dd/yyyy')) {
+    if (checkedDate === format(tempDate, 'MM/dd/yyyy')) {
       weekList.push({
         isToday: true,
         day: getDate(tempDate),
+        date: tempDate,
       });
     } else if (getMonth(tempDate) + 1 === month) {
       weekList.push({
         isPrevOrNext: false,
         day: getDate(tempDate),
+        date: tempDate,
       });
     } else {
       weekList.push({
         isPrevOrNext: true,
         day: getDate(tempDate),
+        date: tempDate,
       });
     }
   }
@@ -44,14 +49,14 @@ const CalendarBody = ({year, month, windowWidth}) => {
       key={idx}
       style={{
         width: Math.floor(windowWidth / 7),
+        height: 50,
         textAlign: 'center',
-        borderWidth: item.isToday && 1,
-        borderRadius: item.isToday && 10,
-        borderStyle: item.isToday && 'solid',
-        borderColor: item.isToday && 'purple',
+        backgroundColor: item.isToday && '#d0d7f2',
+
+        borderColor: item.isToday && '#3f51b5',
         opacity: item.isPrevOrNext ? 0.3 : 1,
       }}
-      onPress={() => console.log('@TODO - click event')}>
+      onPress={() => setCheckedDate(format(item.date, 'MM/dd/yyyy'))}>
       {item.day}
     </Text>
   ));
