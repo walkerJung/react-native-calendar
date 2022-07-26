@@ -15,15 +15,16 @@ import {
   Directions,
   State,
 } from 'react-native-gesture-handler';
+import {addDays, startOfWeek, getMonth} from 'date-fns';
 
 const CalendarScreen = () => {
   const [wrap, setWrap] = useState(true);
   const [year, setYear] = useState(new Date().getFullYear());
-  const [month, setMonth] = useState(new Date().getMonth() + 1);
-  const yearMonth = year + '년' + ' ' + month + '월';
+  const [month, setMonth] = useState(new Date().getMonth());
+  const [date, setDate] = useState(startOfWeek(new Date(), {weekStartsOn: 0}));
+  const yearMonth = year + '년' + ' ' + (month + 1) + '월';
   const windowWidth = Dimensions.get('window').width;
   const sharedVal = useSharedValue('wrap');
-
   const prevMonth = () => {
     if (month === 1) {
       setMonth(12);
@@ -42,9 +43,26 @@ const CalendarScreen = () => {
     }
   };
 
+  const prevWeek = () => {
+    // if(month > ){
+    // }else{
+    //   setDate(startOfWeek(addDays(date, -7)));
+    // }
+  };
+
+  const nextWeek = () => {
+    setDate(startOfWeek(addDays(date, 7)));
+  };
+
   useEffect(() => {
     sharedVal.value = wrap ? 'nowrap' : 'wrap';
   }, [wrap]);
+
+  useEffect(() => {
+    if (month < getMonth(date)) {
+      setMonth(month + 1);
+    }
+  }, [date]);
 
   return (
     <View style={{marginTop: 10}}>
@@ -54,9 +72,9 @@ const CalendarScreen = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
         }}>
-        <Button title="<" onPress={prevMonth} />
+        <Button title="<" onPress={prevWeek} />
         <Text>{yearMonth}</Text>
-        <Button title=">" onPress={nextMonth} />
+        <Button title=">" onPress={nextWeek} />
       </View>
       <View style={{flexDirection: 'row'}}>
         <CalendarHeader windowWidth={windowWidth} />
@@ -73,9 +91,10 @@ const CalendarScreen = () => {
             flexDirection: 'row',
             flexWrap: sharedVal.value,
           }}>
-          <CalendarBodyOfMonth
+          <CalendarBodyOfWeek
             year={year}
             month={month}
+            date={date}
             windowWidth={windowWidth}
           />
         </Animated.View>
