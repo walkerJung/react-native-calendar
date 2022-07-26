@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Text, View, Dimensions} from 'react-native';
 import styled from 'styled-components/native';
 import {
@@ -9,11 +9,15 @@ import {
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  FadeInUp,
 } from 'react-native-reanimated';
+import {
+  FlingGestureHandler,
+  Directions,
+  State,
+} from 'react-native-gesture-handler';
 
 const CalendarScreen = () => {
-  const [date, setDate] = useState(new Date());
+  const [wrap, setWrap] = useState(true);
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const yearMonth = year + '년' + ' ' + month + '월';
@@ -38,9 +42,9 @@ const CalendarScreen = () => {
     }
   };
 
-  // const animatedStyle = useAnimatedStyle(() => ({
-  //   transform: [{flexWrap:}]
-  // }), []);
+  useEffect(() => {
+    sharedVal.value = wrap ? 'nowrap' : 'wrap';
+  }, [wrap]);
 
   return (
     <View style={{marginTop: 10}}>
@@ -57,24 +61,25 @@ const CalendarScreen = () => {
       <View style={{flexDirection: 'row'}}>
         <CalendarHeader windowWidth={windowWidth} />
       </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
+      <FlingGestureHandler
+        direction={Directions.UP | Directions.DOWN}
+        onHandlerStateChange={({nativeEvent}) => {
+          if (nativeEvent.state === State.ACTIVE) {
+            setWrap(prev => !prev);
+          }
         }}>
-        <CalendarBodyOfMonth
-          year={year}
-          month={month}
-          windowWidth={windowWidth}
-          exiting={FadeInUp.duration(1500)}
-        />
-        <Button title="TEST" />
-        {/* <CalendarBodyOfWeek
-          year={year}
-          month={month}
-          windowWidth={windowWidth}
-        /> */}
-      </View>
+        <Animated.View
+          style={{
+            flexDirection: 'row',
+            flexWrap: sharedVal.value,
+          }}>
+          <CalendarBodyOfMonth
+            year={year}
+            month={month}
+            windowWidth={windowWidth}
+          />
+        </Animated.View>
+      </FlingGestureHandler>
     </View>
   );
 };
