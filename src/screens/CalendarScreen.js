@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Text, View, Dimensions} from 'react-native';
-import styled from 'styled-components/native';
 import {
   CalendarHeader,
   CalendarBodyOfMonth,
@@ -57,8 +56,7 @@ const CalendarScreen = () => {
 
   const handlerGesture = () => {
     setWrap(!wrap);
-    setYear(getYear(date));
-    setMonth(getMonth(date));
+    setDate(new Date(year, month));
   };
 
   const defaultSpringStyles = useAnimatedStyle(() => {
