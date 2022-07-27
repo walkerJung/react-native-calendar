@@ -7,27 +7,31 @@ import {
   CalendarBodyOfWeek,
 } from '../components';
 import Animated, {
-  useAnimatedStyle,
   useSharedValue,
+  useAnimatedStyle,
 } from 'react-native-reanimated';
 import {
   FlingGestureHandler,
   Directions,
   State,
 } from 'react-native-gesture-handler';
-import {addDays, startOfWeek, getMonth} from 'date-fns';
+import {addDays, startOfWeek, getYear, getMonth, format} from 'date-fns';
 
 const CalendarScreen = () => {
   const [wrap, setWrap] = useState(true);
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth());
   const [date, setDate] = useState(startOfWeek(new Date(), {weekStartsOn: 0}));
+  const [checkedDate, setCheckedDate] = useState(
+    format(new Date(), 'MM/dd/yyyy'),
+  );
   const yearMonth = year + '년' + ' ' + (month + 1) + '월';
   const windowWidth = Dimensions.get('window').width;
   const sharedVal = useSharedValue('wrap');
+
   const prevMonth = () => {
-    if (month === 1) {
-      setMonth(12);
+    if (month === 0) {
+      setMonth(11);
       setYear(year - 1);
     } else {
       setMonth(month - 1);
@@ -35,8 +39,8 @@ const CalendarScreen = () => {
   };
 
   const nextMonth = () => {
-    if (month === 12) {
-      setMonth(1);
+    if (month === 11) {
+      setMonth(0);
       setYear(year + 1);
     } else {
       setMonth(month + 1);
@@ -44,23 +48,43 @@ const CalendarScreen = () => {
   };
 
   const prevWeek = () => {
-    // if(month > ){
-    // }else{
-    //   setDate(startOfWeek(addDays(date, -7)));
-    // }
+    setDate(startOfWeek(addDays(date, -7)));
   };
 
   const nextWeek = () => {
     setDate(startOfWeek(addDays(date, 7)));
   };
 
+  const handlerGesture = () => {
+    setWrap(!wrap);
+    setYear(getYear(date));
+    setMonth(getMonth(date));
+  };
+
+  const defaultSpringStyles = useAnimatedStyle(() => {
+    return {
+      flexWrap: sharedVal.value,
+    };
+  });
+
   useEffect(() => {
-    sharedVal.value = wrap ? 'nowrap' : 'wrap';
+    sharedVal.value = wrap ? 'wrap' : 'nowrap';
   }, [wrap]);
 
   useEffect(() => {
-    if (month < getMonth(date)) {
-      setMonth(month + 1);
+    if (getYear(date) < year) {
+      setYear(year - 1);
+      setMonth(11);
+    } else if (getYear(date) > year) {
+      setYear(year + 1);
+      setMonth(0);
+    } else {
+      if (getMonth(date) > month) {
+        setMonth(month + 1);
+      }
+      if (getMonth(date) < month) {
+        setMonth(month - 1);
+      }
     }
   }, [date]);
 
@@ -72,31 +96,44 @@ const CalendarScreen = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
         }}>
-        <Button title="<" onPress={prevWeek} />
+        <Button title="<" onPress={wrap ? prevMonth : prevWeek} />
         <Text>{yearMonth}</Text>
-        <Button title=">" onPress={nextWeek} />
+        <Button title=">" onPress={wrap ? nextMonth : nextWeek} />
       </View>
       <View style={{flexDirection: 'row'}}>
         <CalendarHeader windowWidth={windowWidth} />
       </View>
+
       <FlingGestureHandler
         direction={Directions.UP | Directions.DOWN}
         onHandlerStateChange={({nativeEvent}) => {
           if (nativeEvent.state === State.ACTIVE) {
-            setWrap(prev => !prev);
+            handlerGesture();
           }
         }}>
         <Animated.View
-          style={{
-            flexDirection: 'row',
-            flexWrap: sharedVal.value,
-          }}>
-          <CalendarBodyOfWeek
-            year={year}
-            month={month}
-            date={date}
-            windowWidth={windowWidth}
-          />
+          style={[
+            {
+              flexDirection: 'row',
+            },
+            defaultSpringStyles,
+          ]}>
+          {wrap ? (
+            <CalendarBodyOfMonth
+              year={year}
+              month={month}
+              checkedDate={checkedDate}
+              setCheckedDate={setCheckedDate}
+              windowWidth={windowWidth}
+            />
+          ) : (
+            <CalendarBodyOfWeek
+              date={date}
+              checkedDate={checkedDate}
+              setCheckedDate={setCheckedDate}
+              windowWidth={windowWidth}
+            />
+          )}
         </Animated.View>
       </FlingGestureHandler>
     </View>

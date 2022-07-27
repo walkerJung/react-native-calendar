@@ -1,3 +1,3 @@
-export {default as CalendarHeader} from '../components/CalendarHeader';
-export {default as CalendarBodyOfMonth} from '../components/CalendarBodyOfMonth';
-export {default as CalendarBodyOfWeek} from '../components/CalendarBodyOfWeek';
+export {default as CalendarHeader} from './CalendarHeader';
+export {default as CalendarBodyOfMonth} from './CalendarBodyOfMonth';
+export {default as CalendarBodyOfWeek} from './CalendarBodyOfWeek';

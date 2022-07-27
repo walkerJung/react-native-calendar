@@ -9,10 +9,12 @@ import {
   getWeeksInMonth,
 } from 'date-fns';
 
-const CalendarBodyOfWeek = ({year, month, date, windowWidth}) => {
-  const [checkedDate, setCheckedDate] = useState(
-    format(new Date(), 'MM/dd/yyyy'),
-  );
+const CalendarBodyOfWeek = ({
+  checkedDate,
+  setCheckedDate,
+  date,
+  windowWidth,
+}) => {
   const weekStart = startOfWeek(date, {weekStartsOn: 0});
   const weekList = [];
 

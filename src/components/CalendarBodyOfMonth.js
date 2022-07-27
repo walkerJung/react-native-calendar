@@ -10,11 +10,14 @@ import {
   format,
 } from 'date-fns';
 
-const CalendarBodyOfMonth = ({year, month, windowWidth}) => {
-  const [checkedDate, setCheckedDate] = useState(
-    format(new Date(), 'MM/dd/yyyy'),
-  );
-  const _date = new Date(year, month - 1, 1);
+const CalendarBodyOfMonth = ({
+  year,
+  month,
+  checkedDate,
+  setCheckedDate,
+  windowWidth,
+}) => {
+  const _date = new Date(year, month, 1);
   const monthStart = startOfMonth(_date);
   const weekLength = getWeeksInMonth(monthStart);
   const weekStart = startOfWeek(monthStart, {weekStartsOn: 0});
@@ -29,7 +32,7 @@ const CalendarBodyOfMonth = ({year, month, windowWidth}) => {
         day: getDate(tempDate),
         date: tempDate,
       });
-    } else if (getMonth(tempDate) + 1 === month) {
+    } else if (getMonth(tempDate) === month) {
       weekList.push({
         isPrevOrNext: false,
         day: getDate(tempDate),
