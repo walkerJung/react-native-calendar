@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Text, View, Dimensions} from 'react-native';
+import {View, Dimensions} from 'react-native';
 import {CalendarHeader, CalendarBody} from '../components';
 import Animated, {
   useSharedValue,
@@ -84,19 +84,15 @@ const CalendarScreen = () => {
 
   return (
     <View style={{marginTop: 10}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-        <Button title="<" onPress={wrap ? prevMonth : prevWeek} />
-        <Text>{yearMonth}</Text>
-        <Button title=">" onPress={wrap ? nextMonth : nextWeek} />
-      </View>
-      <View style={{flexDirection: 'row'}}>
-        <CalendarHeader windowWidth={windowWidth} />
-      </View>
+      <CalendarHeader
+        yearMonth={yearMonth}
+        wrap={wrap}
+        prevMonth={prevMonth}
+        prevWeek={prevWeek}
+        nextMonth={nextMonth}
+        nextWeek={nextWeek}
+        windowWidth={windowWidth}
+      />
 
       <FlingGestureHandler
         direction={Directions.UP | Directions.DOWN}
