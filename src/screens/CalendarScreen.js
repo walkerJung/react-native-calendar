@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, Dimensions} from 'react-native';
+import {View, Dimensions, Text, Button} from 'react-native';
 import {CalendarHeader, CalendarBody} from '../components';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
+  FadeIn,
+  Layout,
 } from 'react-native-reanimated';
 import {
   FlingGestureHandler,
@@ -93,7 +95,6 @@ const CalendarScreen = () => {
         nextWeek={nextWeek}
         windowWidth={windowWidth}
       />
-
       <FlingGestureHandler
         direction={Directions.UP | Directions.DOWN}
         onHandlerStateChange={({nativeEvent}) => {
@@ -107,7 +108,8 @@ const CalendarScreen = () => {
               flexDirection: 'row',
             },
             defaultSpringStyles,
-          ]}>
+          ]}
+          layout={Layout.springify()}>
           <CalendarBody
             year={year}
             month={month}

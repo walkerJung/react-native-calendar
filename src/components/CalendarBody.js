@@ -75,7 +75,7 @@ const CalendarBody = ({
 
   useEffect(() => {
     wrap ? handleMonthDate() : handleWeekDate();
-  }, [year, month, wrap, date]);
+  }, [year, month, wrap, date, checkedDate]);
 
   if (!dateList.length) {
     return <Text>달력데이터를 불러오는중 오류가 발생하였습니다.</Text>;
