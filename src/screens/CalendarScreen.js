@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {View, Dimensions, Text, Button} from 'react-native';
+import {View, Dimensions} from 'react-native';
 import {CalendarHeader, CalendarBody} from '../components';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  FadeIn,
   Layout,
 } from 'react-native-reanimated';
 import {
