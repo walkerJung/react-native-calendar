@@ -1,10 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Text, View, Dimensions} from 'react-native';
-import {
-  CalendarHeader,
-  CalendarBodyOfMonth,
-  CalendarBodyOfWeek,
-} from '../components';
+import {CalendarHeader, CalendarBody} from '../components';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -116,22 +112,15 @@ const CalendarScreen = () => {
             },
             defaultSpringStyles,
           ]}>
-          {wrap ? (
-            <CalendarBodyOfMonth
-              year={year}
-              month={month}
-              checkedDate={checkedDate}
-              setCheckedDate={setCheckedDate}
-              windowWidth={windowWidth}
-            />
-          ) : (
-            <CalendarBodyOfWeek
-              date={date}
-              checkedDate={checkedDate}
-              setCheckedDate={setCheckedDate}
-              windowWidth={windowWidth}
-            />
-          )}
+          <CalendarBody
+            year={year}
+            month={month}
+            wrap={wrap}
+            date={date}
+            checkedDate={checkedDate}
+            setCheckedDate={setCheckedDate}
+            windowWidth={windowWidth}
+          />
         </Animated.View>
       </FlingGestureHandler>
     </View>
